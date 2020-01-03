@@ -159,6 +159,7 @@ class GANTrainer(object):
                                 lr=cfg.TRAIN.GENERATOR_LR,
                                 betas=(0.5, 0.999))
         count = 0
+        detectron = Detectron()
         for epoch in range(self.max_epoch):
             start_t = time.time()
             if epoch % lr_decay_step == 0 and epoch > 0:
@@ -214,7 +215,7 @@ class GANTrainer(object):
                 errG = compute_generator_loss(netD, fake_imgs,
                                               real_labels, mu, self.gpus)
                 kl_loss = KL_loss(mu, logvar)
-                detectron = Detectron()
+
 
                 fake_img = fake_imgs.cpu().detach().numpy()
                 #print(fake_img.shape)
@@ -268,7 +269,6 @@ class GANTrainer(object):
         save_model(netG, netD, self.max_epoch, self.model_dir)
         #
         self.summary_writer.close()
-
 
 
     def sample(self, datapath, stage=1):
